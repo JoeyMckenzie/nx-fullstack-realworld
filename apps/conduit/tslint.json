@@ -1,0 +1,20 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "nxFullstackRealworld",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "nx-fullstack-realworld",
+      "kebab-case"
+    ]
+  },
+  "linterOptions": {
+    "exclude": ["!**/*"]
+  }
+}
