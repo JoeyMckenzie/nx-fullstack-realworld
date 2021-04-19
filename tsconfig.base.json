@@ -14,10 +14,19 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "@nx-fullstack-realworld/api-interfaces": [
         "libs/api-interfaces/src/index.ts"
+      ],
+      "@nx-fullstack-realworld/shared": ["libs/shared/src/index.ts"],
+      "@nx-fullstack-realworld/frontend/users": [
+        "libs/frontend/users/src/index.ts"
+      ],
+      "@nx-fullstack-realworld/frontend/components": [
+        "libs/frontend/components/src/index.ts"
       ]
     }
   },

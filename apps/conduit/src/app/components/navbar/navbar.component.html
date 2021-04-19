@@ -1,0 +1,12 @@
+<nav class="navbar navbar-light">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">conduit</a>
+    <ul class="nav navbar-nav pull-xs-right">
+      <li class="nav-item" *ngFor="let link of navbarLinks">
+        <a class="nav-link" [routerLink]="link.route" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+          {{ link.displayName }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
