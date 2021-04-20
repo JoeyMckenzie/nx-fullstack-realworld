@@ -1,0 +1,25 @@
+{
+  "projects": {
+    "users": {
+      "type": "library",
+      "root": "libs/backend/users",
+      "entryFile": "index",
+      "sourceRoot": "libs/backend/users/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/backend/users/tsconfig.lib.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/backend/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/backend/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/backend/common/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}

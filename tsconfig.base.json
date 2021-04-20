@@ -27,6 +27,12 @@
       ],
       "@nx-fullstack-realworld/frontend/components": [
         "libs/frontend/components/src/index.ts"
+      ],
+      "@nx-fullstack-realworld/backend/common": [
+        "libs/backend/common/src/index.ts"
+      ],
+      "@nx-fullstack-realworld/backend/users": [
+        "libs/backend/users/src/index.ts"
       ]
     }
   },

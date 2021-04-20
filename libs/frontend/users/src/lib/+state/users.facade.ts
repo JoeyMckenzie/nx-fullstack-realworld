@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
 import { select, Store, Action } from '@ngrx/store';
-import { UserRegistrationRequest } from "@nx-fullstack-realworld/shared";
+import { UserRegistrationRequest } from '@nx-fullstack-realworld/shared';
 
-import * as UserActions from './users.actions';
+import * as fromActions from './users.actions';
 import * as fromUsers from './users.reducer';
-import * as UsersSelectors from './users.selectors';
+import * as fromSelectors from './users.selectors';
 
 @Injectable()
 export class UsersFacade {
-  loading$ = this.store.pipe(select(UsersSelectors.isLoading));
-  user$ = this.store.pipe(select(UsersSelectors.getUser));
+  loading$ = this.store.pipe(select(fromSelectors.isLoading));
+  user$ = this.store.pipe(select(fromSelectors.getUser));
 
   constructor(private store: Store<fromUsers.UsersPartialState>) {}
 
@@ -19,6 +19,6 @@ export class UsersFacade {
   }
 
   register(userRegistration: UserRegistrationRequest) {
-    this.store.dispatch(UserActions.registerUser(userRegistration));
+    this.store.dispatch(fromActions.registerUser(userRegistration));
   }
 }

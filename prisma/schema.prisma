@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["microsoftSqlServer"]
+}
+
+model User {
+  id             String    @id @default(uuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  name           String?
+  email          String    @unique
+  hashedPassword String?
+  articles       Article[]
+  followedBy     User[]    @relation("UserFollows", references: [id])
+  following      User[]    @relation("UserFollows", references: [id])
+  favorites      Article[] @relation("Favorites", references: [id])
+  comments       Comment[]
+  bio            String    @default("")
+}
+
+model Article {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  intro       String
+  content     String
+  tags        Tag[]     @relation(references: [id])
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+  favoritedBy User[]    @relation("Favorites", references: [id])
+  comments    Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId String?
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String    @unique
+  articles  Article[] @relation(references: [id])
+}

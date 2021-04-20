@@ -1,15 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { isNullOrUndefined } from "@nx-fullstack-realworld/shared";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { isNullOrUndefined } from '@nx-fullstack-realworld/shared';
 
 @Component({
   selector: 'nx-fullstack-realworld-register',
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-
   registerForm: FormGroup;
 
   constructor(
@@ -27,7 +31,6 @@ export class RegisterComponent {
     return this.registerForm.valid;
   }
 
-
   get formErrors(): string[] {
     let errors = [];
 
@@ -37,8 +40,6 @@ export class RegisterComponent {
       if (isNullOrUndefined(control) || isNullOrUndefined(control!.errors)) {
         continue;
       }
-
-
     }
 
     return [''];

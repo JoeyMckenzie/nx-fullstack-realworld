@@ -3,8 +3,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { BackendUsersModule } from '@nx-fullstack-realworld/backend/users';
+
 @Module({
-  imports: [],
+  imports: [BackendUsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -43,6 +43,12 @@
     },
     "frontend-components": {
       "tags": []
+    },
+    "backend-common": {
+      "tags": []
+    },
+    "backend-users": {
+      "tags": []
     }
   }
 }
