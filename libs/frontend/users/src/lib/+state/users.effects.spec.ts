@@ -11,7 +11,7 @@ import { hot } from '@nrwl/angular/testing';
 import { UsersEffects } from './users.effects';
 import * as UsersActions from './users.actions';
 
-describe('UsersEffects', () => {
+describe(UsersEffects.name, () => {
   let actions: Observable<any>;
   let effects: UsersEffects;
 
@@ -26,12 +26,12 @@ describe('UsersEffects', () => {
       ],
     });
 
-    effects = TestBed.get(UsersEffects);
+    effects = TestBed.inject(UsersEffects);
   });
 
-  describe('loadUsers$', () => {
+  describe('registerUser$', () => {
     it('should work', () => {
-      actions = hot('-a-|', { a: UsersActions.loadUsers() });
+      actions = hot('-a-|', { a: UsersActions.registerUser() });
 
       const expected = hot('-a-|', {
         a: UsersActions.loadUsersSuccess({ users: [] }),

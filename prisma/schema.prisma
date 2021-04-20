@@ -10,50 +10,50 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id         String    @id @default(uuid())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+model Users {
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   username   String?
-  email      String    @unique
+  email      String     @unique
   password   String?
-  articles   Article[]
-  followedBy User[]    @relation("UserFollows", references: [id])
-  following  User[]    @relation("UserFollows", references: [id])
-  favorites  Article[] @relation("Favorites", references: [id])
-  comments   Comment[]
-  bio        String    @default("")
+  articles   Articles[]
+  followedBy Users[]    @relation("UserFollows", references: [id])
+  following  Users[]    @relation("UserFollows", references: [id])
+  favorites  Articles[] @relation("Favorites", references: [id])
+  comments   Comments[]
+  bio        String     @default("")
 }
 
-model Article {
-  id          String    @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+model Articles {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   title       String
   summary     String
   body        String
-  tags        Tag[]     @relation(references: [id])
-  user        User?     @relation(fields: [userId], references: [id])
+  tags        Tags[]     @relation(references: [id])
+  user        Users?     @relation(fields: [userId], references: [id])
   userId      String?
-  favoritedBy User[]    @relation("Favorites", references: [id])
-  comments    Comment[]
+  favoritedBy Users[]    @relation("Favorites", references: [id])
+  comments    Comments[]
 }
 
-model Comment {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  content   String
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?
-  article   Article? @relation(fields: [articleId], references: [id])
-  articleId String?
-}
-
-model Tag {
+model Comments {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  name      String    @unique
-  articles  Article[] @relation(references: [id])
+  content   String
+  user      Users?    @relation(fields: [userId], references: [id])
+  userId    String?
+  article   Articles? @relation(fields: [articleId], references: [id])
+  articleId String?
+}
+
+model Tags {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String     @unique
+  articles  Articles[] @relation(references: [id])
 }
