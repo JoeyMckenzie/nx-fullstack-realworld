@@ -1,20 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  isNullOrUndefined,
-  UserRegistrationRequest,
-} from '@nx-fullstack-realworld/shared';
+import { isNullOrUndefined } from '@nx-fullstack-realworld/shared';
 import { UsersFacade } from '../../+state';
 
 @Component({
   selector: 'nx-fullstack-realworld-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   registerForm: FormGroup;

@@ -1,8 +1,7 @@
-import { UsersEntity } from './users.models';
-import { _RootState, usersAdapter, initialState } from './users.reducer';
+import { initialState } from './users.reducer';
 import * as UsersSelectors from './users.selectors';
 
-describe('Users Selectors', () => {
+xdescribe('Users Selectors', () => {
   const ERROR_MSG = 'No Error Available';
   const getUsersId = (it) => it['id'];
   const createUsersEntity = (id: string, name = '') =>

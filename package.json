@@ -9,6 +9,7 @@
     "start": "nx run-many --parallel --target=serve --projects=api,conduit",
     "build": "ng build",
     "test": "ng test",
+    "test:frontend:unit": "nx run-many --parallel --target=test --projects=conduit,frontend-users",
     "lint": "nx workspace-lint && ng lint",
     "e2e": "ng e2e",
     "affected:apps": "nx affected:apps",

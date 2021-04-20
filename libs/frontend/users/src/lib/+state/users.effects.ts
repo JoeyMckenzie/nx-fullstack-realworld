@@ -22,7 +22,7 @@ export class UsersEffects {
             .pipe(map((response) => fromActions.registerUserSuccess(response)));
         },
         onError: (action, error) => {
-          console.error(`Error registering user ${action.username}`, error);
+          // console.error(`Error registering user ${action.username}`, error);
           return fromActions.registerUserFailure(error);
         },
       })
