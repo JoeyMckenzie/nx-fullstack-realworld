@@ -15,15 +15,17 @@
           </li>
         </ul>
 
-        <form [formGroup]="registerForm" (submit)="handleSubmit()">
+        <form [formGroup]="registerForm" (submit)="onFormSubmit()">
           <fieldset class="form-group">
-            <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Your Name" required>
+            <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Your Name"
+              required>
           </fieldset>
           <fieldset class="form-group">
             <input formControlName="email" class="form-control form-control-lg" type="text" placeholder="Email">
           </fieldset>
           <fieldset class="form-group">
-            <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password">
+            <input formControlName="password" class="form-control form-control-lg" type="password"
+              placeholder="Password">
           </fieldset>
           <button type="submit" class="btn btn-lg btn-primary pull-xs-right">
             Sign up

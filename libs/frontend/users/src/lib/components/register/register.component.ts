@@ -5,12 +5,15 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { isNullOrUndefined } from '@nx-fullstack-realworld/shared';
+import {
+  isNullOrUndefined,
+  UserRegistrationRequest,
+} from '@nx-fullstack-realworld/shared';
+import { UsersFacade } from '../../+state';
 
 @Component({
   selector: 'nx-fullstack-realworld-register',
   templateUrl: './register.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
@@ -18,7 +21,7 @@ export class RegisterComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private changeDetectionService: ChangeDetectorRef
+    private usersFacade: UsersFacade
   ) {
     this.registerForm = this.formBuilder.group({
       email: ['', Validators.required],
@@ -45,7 +48,11 @@ export class RegisterComponent {
     return [''];
   }
 
-  handleSubmit() {
-    console.log(this.registerForm);
+  onFormSubmit() {
+    const email: string = this.registerForm.get('email')?.value;
+    const username: string = this.registerForm.get('username')?.value;
+    const password: string = this.registerForm.get('password')?.value;
+
+    this.usersFacade.register({ email, username, password });
   }
 }

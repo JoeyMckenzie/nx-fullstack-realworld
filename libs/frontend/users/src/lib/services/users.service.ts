@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  GITHUB_REALWORLD_API_BASE_URL,
   UserLoginRequest,
   UserLoginResponse,
   UserRegistrationRequest,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
 import { Observable } from 'rxjs';
+import { environment } from '@conduit/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class UsersService {
     request: UserRegistrationRequest
   ): Observable<UserRegistrationResponse> {
     return this.http.post<UserRegistrationResponse>(
-      `${GITHUB_REALWORLD_API_BASE_URL}/users`,
+      `${environment.apiBaseUrl}/users`,
       {
         user: request,
       }
@@ -28,7 +28,7 @@ export class UsersService {
 
   loginUser(request: UserLoginRequest): Observable<UserRegistrationResponse> {
     return this.http.post<UserLoginResponse>(
-      `${GITHUB_REALWORLD_API_BASE_URL}/users`,
+      `${environment.apiBaseUrl}/users`,
       {
         user: request,
       }

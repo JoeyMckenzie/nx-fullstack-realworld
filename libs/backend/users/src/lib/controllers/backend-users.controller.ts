@@ -13,6 +13,7 @@ import {
 } from '@nx-fullstack-realworld/shared';
 import { from, Observable } from 'rxjs';
 import { RegisterUserCommand } from '../commands';
+import { UserRegistrationDto } from '../models';
 
 @Controller('users')
 export class BackendUsersController {
@@ -23,7 +24,7 @@ export class BackendUsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   registerUser(
-    @Body() userRegistrationRequest: UserRegistrationRequest
+    @Body() userRegistrationRequest: UserRegistrationDto
   ): Observable<UserRegistrationResponse> {
     this.logger.log(
       `Received user registration request for ${userRegistrationRequest.email}`
@@ -33,7 +34,7 @@ export class BackendUsersController {
 
     return from(
       this.commandBus.execute(
-        new RegisterUserCommand(email, username, password)
+        new RegisterUserCommand(email!, username!, password!)
       )
     );
   }

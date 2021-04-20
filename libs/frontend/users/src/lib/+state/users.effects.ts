@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { fetch } from '@nrwl/angular';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { UsersService } from '../services/users.service';
 import * as fromActions from './users.actions';
@@ -13,7 +13,7 @@ export class UsersEffects {
       ofType(fromActions.registerUser),
       fetch({
         run: (action) => {
-          this.usersService
+          return this.usersService
             .registerUser({
               email: action.email,
               username: action.username,

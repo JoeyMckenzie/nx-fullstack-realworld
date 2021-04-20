@@ -5,6 +5,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { from } from 'rxjs';
 
 @Injectable()
 export class PrismaService extends PrismaClient
@@ -15,10 +16,10 @@ export class PrismaService extends PrismaClient
     super();
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     try {
       this.logger.log('Creating Prisma client instance...');
-      await this.$connect();
+      from(this.$connect());
       this.logger.log('Prisma successfully initialized!');
     } catch (e) {
       this.logger.log('Prisma failed to initialize!');
@@ -26,7 +27,7 @@ export class PrismaService extends PrismaClient
     }
   }
 
-  async onModuleDestroy() {
-    await this.$disconnect();
+  onModuleDestroy() {
+    from(this.$disconnect());
   }
 }
