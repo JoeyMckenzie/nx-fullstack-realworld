@@ -29,6 +29,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/architect": "^0.1102.9",
     "@angular/animations": "^11.2.10",
     "@angular/common": "^11.2.10",
     "@angular/compiler": "^11.2.10",
@@ -51,7 +52,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "~6.5.5",
+    "rxjs": "~6.6.7",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
