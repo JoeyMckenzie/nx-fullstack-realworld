@@ -15,9 +15,9 @@ export class RegisterUserHandler
     return from(
       this.prisma.user.create({
         data: {
-          name: command.username,
+          username: command.username,
           email: command.email,
-          hashedPassword: command.password,
+          password: command.password,
         },
       })
     ).toPromise();

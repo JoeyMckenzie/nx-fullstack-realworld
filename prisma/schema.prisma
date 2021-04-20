@@ -2,28 +2,27 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["microsoftSqlServer"]
+  provider = "prisma-client-js"
 }
 
 model User {
-  id             String    @id @default(uuid())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  name           String?
-  email          String    @unique
-  hashedPassword String?
-  articles       Article[]
-  followedBy     User[]    @relation("UserFollows", references: [id])
-  following      User[]    @relation("UserFollows", references: [id])
-  favorites      Article[] @relation("Favorites", references: [id])
-  comments       Comment[]
-  bio            String    @default("")
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  username   String?
+  email      String    @unique
+  password   String?
+  articles   Article[]
+  followedBy User[]    @relation("UserFollows", references: [id])
+  following  User[]    @relation("UserFollows", references: [id])
+  favorites  Article[] @relation("Favorites", references: [id])
+  comments   Comment[]
+  bio        String    @default("")
 }
 
 model Article {
@@ -31,8 +30,8 @@ model Article {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   title       String
-  intro       String
-  content     String
+  summary     String
+  body        String
   tags        Tag[]     @relation(references: [id])
   user        User?     @relation(fields: [userId], references: [id])
   userId      String?
