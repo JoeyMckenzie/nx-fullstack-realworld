@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { Observable, of } from 'rxjs';
 
@@ -15,15 +15,26 @@ import {
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
 import { UsersService } from '../services/users.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LocalStorageService } from '../services/local-storage.service';
+import {
+  mockError,
+  mockHttpException,
+  mockUser,
+  mockUserRegistrationDto,
+} from './users.mock';
+import { Router } from '@angular/router';
 
 describe(UsersEffects.name, () => {
   let actions: Observable<any>;
   let effects: UsersEffects;
   let usersService: UsersService;
+  let storageService: LocalStorageService;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NxModule.forRoot()],
+      imports: [NxModule.forRoot(), RouterTestingModule],
       providers: [
         UsersEffects,
         DataPersistence,
@@ -33,6 +44,18 @@ describe(UsersEffects.name, () => {
             registerUser: jest.fn(),
           },
         },
+        {
+          provide: LocalStorageService,
+          useValue: {
+            setToken: jest.fn(),
+          },
+        },
+        {
+          provide: Router,
+          useValue: {
+            navigateByUrl: jest.fn(),
+          },
+        },
         provideMockActions(() => actions),
         provideMockStore(),
       ],
@@ -40,7 +63,11 @@ describe(UsersEffects.name, () => {
 
     effects = TestBed.inject(UsersEffects);
     usersService = TestBed.inject(UsersService);
+    storageService = TestBed.inject(LocalStorageService);
+    router = TestBed.inject(Router);
   });
+
+  afterEach(() => jest.clearAllMocks());
 
   describe('registerUser$', () => {
     it('should dispatch the success action when users service is successful', () => {
@@ -76,8 +103,7 @@ describe(UsersEffects.name, () => {
 
     it('should dispatch the failure action when users service returns an error', () => {
       // Arrange
-      const expectedError: ApiError = { errors: ['error'] };
-      const responseError = cold('-#-', undefined, expectedError);
+      const responseError = cold('-#-', undefined, mockHttpException);
       const registerSpy = jest
         .spyOn(usersService, 'registerUser')
         .mockReturnValue(responseError);
@@ -92,12 +118,27 @@ describe(UsersEffects.name, () => {
       });
 
       const expected = cold('--b', {
-        b: fromActions.registerUserFailure(expectedError),
+        b: fromActions.registerUserFailure({ errors: mockError.message }),
       });
 
       // Assert
       expect(effects.registerUser$).toBeObservable(expected);
       expect(registerSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should set the token using the storage service on success', () => {
+      // Arrange
+      const setTokenSpy = jest.spyOn(storageService, 'setToken');
+      const routerSpy = jest.spyOn(router, 'navigateByUrl');
+
+      // Act
+      actions = of(fromActions.registerUserSuccess(mockUser));
+
+      // Assert
+      effects.registerUserSuccess$.subscribe(() => {
+        expect(setTokenSpy).toHaveBeenCalled();
+        expect(routerSpy).toHaveBeenCalled();
+      });
     });
   });
 });

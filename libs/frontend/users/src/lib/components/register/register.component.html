@@ -10,9 +10,13 @@
 
         <ul *ngIf="!isValid" class="error-messages">
           <li *ngIf="getFormControlErrors('email', 'email')">Please enter a valid email</li>
-          <li *ngIf="getFormControlErrors('username', 'email')">Email is a required</li>
+          <li *ngIf="getFormControlErrors('email', 'required')">Email is a required</li>
           <li *ngIf="getFormControlErrors('username', 'required')">Username is a required</li>
-          <li *ngIf="!isNullOrUndefined(currentRegistrationError$ | async)">{{ currentRegistrationError$ | async }}</li>
+          <li *ngIf="getFormControlErrors('password', 'required')">Password is a required</li>
+          <span *ngIf="!isNullOrUndefined(currentRegistrationErrors$ | async)">
+            <li *ngFor="let error of (currentRegistrationErrors$ | async)">{{ error }}
+            </li>
+          </span>
         </ul>
 
         <form [formGroup]="registerForm" (submit)="onFormSubmit()">

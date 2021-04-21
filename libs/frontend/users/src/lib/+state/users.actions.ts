@@ -16,5 +16,5 @@ export const registerUserSuccess = createAction(
 );
 export const registerUserFailure = createAction(
   '[Users] Register user failure',
-  props<ApiError>()
+  props<{ errors: string[] }>()
 );

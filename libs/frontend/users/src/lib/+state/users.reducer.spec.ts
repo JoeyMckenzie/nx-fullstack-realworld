@@ -14,7 +14,7 @@ describe('Users Reducer', () => {
       // Assert
       expect(result.loading).toBe(true);
       expect(result.currentUser).toBeUndefined();
-      expect(result.currentError).toBeUndefined();
+      expect(result.currentErrors).toBeUndefined();
     });
 
     it('should return the user upon successful registration', () => {
@@ -27,12 +27,14 @@ describe('Users Reducer', () => {
       // Assert
       expect(result.loading).toBe(false);
       expect(result.currentUser).toStrictEqual(mockUser);
-      expect(result.currentError).toBeUndefined();
+      expect(result.currentErrors).toBeUndefined();
     });
 
     it('should return an error upon unsuccessful registration', () => {
       // Arrange
-      const action = fromActions.registerUserFailure(mockError);
+      const action = fromActions.registerUserFailure({
+        errors: mockError.message,
+      });
 
       // Act
       const result: State = reducer(initialState, action);
@@ -40,7 +42,7 @@ describe('Users Reducer', () => {
       // Assert
       expect(result.loading).toBe(false);
       expect(result.currentUser).toBeUndefined();
-      expect(result.currentError).toBe(mockError.errors);
+      expect(result.currentErrors).toStrictEqual(mockError.message);
     });
   });
 });

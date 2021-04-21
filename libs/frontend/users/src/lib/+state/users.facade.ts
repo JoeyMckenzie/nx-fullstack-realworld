@@ -13,7 +13,7 @@ import * as fromSelectors from './users.selectors';
 @Injectable()
 export class UsersFacade {
   loading$ = this.store.pipe(select(fromSelectors.getLoading));
-  currentError$ = this.store.pipe(select(fromSelectors.getCurrentError));
+  currentErrors$ = this.store.pipe(select(fromSelectors.getCurrentErrors));
 
   constructor(private store: Store<fromUsers.UsersPartialState>) {}
 

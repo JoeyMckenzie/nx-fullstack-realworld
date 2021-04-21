@@ -15,6 +15,8 @@ import { mockUserRegistrationDto } from './users.mock';
 import { from } from 'rxjs';
 import { exhaustMap, map, withLatestFrom } from 'rxjs/operators';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LocalStorageService } from '../services/local-storage.service';
 
 interface TestSchema {
   users: State;
@@ -22,6 +24,7 @@ interface TestSchema {
 
 describe('UsersFacade', () => {
   let facade: UsersFacade;
+  let storageService: LocalStorageService;
 
   describe('used in NgModule', () => {
     beforeEach(() => {
@@ -30,7 +33,10 @@ describe('UsersFacade', () => {
           StoreModule.forFeature(USERS_FEATURE_KEY, reducer),
           EffectsModule.forFeature([UsersEffects]),
         ],
-        providers: [UsersFacade],
+        providers: [
+          UsersFacade,
+          { provide: LocalStorageService, useValue: jest.fn() },
+        ],
       })
       class CustomFeatureModule {}
 
@@ -45,7 +51,7 @@ describe('UsersFacade', () => {
       class RootModule {}
 
       TestBed.configureTestingModule({
-        imports: [RootModule, HttpClientModule],
+        imports: [RootModule, HttpClientModule, RouterTestingModule],
       });
 
       facade = TestBed.inject(UsersFacade);
@@ -54,7 +60,7 @@ describe('UsersFacade', () => {
     it('register() should return empty list with loaded === true', (done) => {
       from(readFirst(facade.loading$))
         .pipe(
-          withLatestFrom(readFirst(facade.currentError$)),
+          withLatestFrom(readFirst(facade.currentErrors$)),
           exhaustMap(([loading, errors]) => {
             // Arrange
             expect(errors).toBeUndefined();
@@ -65,7 +71,7 @@ describe('UsersFacade', () => {
 
             // Assert, loading flag should be flipped with no errors
             return from(readFirst(facade.loading$)).pipe(
-              withLatestFrom(readFirst(facade.currentError$)),
+              withLatestFrom(readFirst(facade.currentErrors$)),
               map(([loading, errors]) => {
                 expect(errors).toBeUndefined();
                 expect(loading).toBe(true);

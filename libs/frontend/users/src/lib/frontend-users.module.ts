@@ -10,6 +10,7 @@ import * as fromState from './+state';
 import { UsersService } from './services/users.service';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { LocalStorageService } from './services/local-storage.service';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { LoginComponent } from './components/login/login.component';
     StoreModule.forFeature(fromState.USERS_FEATURE_KEY, fromState.reducer),
     EffectsModule.forFeature([fromState.UsersEffects]),
   ],
-  providers: [fromState.UsersFacade, UsersService],
+  providers: [fromState.UsersFacade, UsersService, LocalStorageService],
   declarations: [RegisterComponent, LoginComponent],
 })
 export class FrontendUsersModule {}

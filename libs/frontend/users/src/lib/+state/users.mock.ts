@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ApiError,
   User,
@@ -19,5 +20,11 @@ export const mockUserRegistrationDto: UserRegistrationDto = {
 };
 
 export const mockError: ApiError = {
-  errors: ['error'],
+  error: 'error',
+  statusCode: 400,
+  message: ['error'],
+};
+
+export const mockHttpException: any = {
+  error: mockError,
 };

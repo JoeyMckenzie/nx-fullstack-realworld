@@ -16,7 +16,7 @@ import { UsersFacade } from '../../+state';
   templateUrl: './register.component.html',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  currentRegistrationError$ = this.usersFacade.currentError$;
+  currentRegistrationErrors$ = this.usersFacade.currentErrors$;
   registerForm!: FormGroup;
   isNullOrUndefined = isNullOrUndefined;
 
@@ -50,13 +50,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.currentRegistrationError$.pipe(takeUntil(this.unsubscribe$));
+    this.currentRegistrationErrors$.pipe(takeUntil(this.unsubscribe$));
 
-    this.registerForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+    this.registerForm = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+      },
+      {
+        updateOn: 'blur',
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -72,7 +77,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.usersFacade.register({ email, username, password });
   }
 
-  getFormControlErrors(control: string, errorType: string): Maybe<string> {
-    return this.registerForm.get(control)?.getError(errorType);
+  getFormControlErrors(controlKey: string, errorType: string): Maybe<string> {
+    const control = this.registerForm.get(controlKey);
+
+    if (control?.pristine) {
+      return '';
+    }
+
+    return control?.getError(errorType);
   }
 }

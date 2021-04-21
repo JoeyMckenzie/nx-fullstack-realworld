@@ -8,13 +8,17 @@ import {
   isNullOrUndefined,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
+import { TokenService } from '../services/token.service';
 
 @CommandHandler(RegisterUserCommand)
 export class RegisterUserHandler
   implements ICommandHandler<RegisterUserCommand> {
   private readonly logger = new Logger(RegisterUserHandler.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tokenService: TokenService
+  ) {}
 
   private handleUserCreationError(
     command: RegisterUserCommand,
@@ -66,6 +70,11 @@ export class RegisterUserHandler
                 email: user.email,
                 bio: user.bio,
                 image: user.email,
+                token: this.tokenService.generateToken(
+                  user.id,
+                  user.username!,
+                  user.email
+                ),
               } as UserRegistrationResponse);
             })
           );

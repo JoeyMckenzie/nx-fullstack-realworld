@@ -16,7 +16,7 @@ export const getLoading = createSelector(
   (state: State) => state.loading === true
 );
 
-export const getCurrentError = createSelector(
+export const getCurrentErrors = createSelector(
   getUsersState,
-  (state: State) => state.currentError
+  (state: State) => state.currentErrors
 );
