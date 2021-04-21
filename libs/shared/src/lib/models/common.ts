@@ -5,6 +5,12 @@ export type ApiErrors = string[];
 // export interface ApiError {
 //   errors: string[]
 // };
+export interface ErrorResponse {
+  message: string;
+  errors: {
+    [key: string]: string[];
+  };
+}
 
 export interface ApiError {
   message: string[];

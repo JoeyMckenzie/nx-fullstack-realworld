@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RegisterUserCommand } from '../commands';
 import { PrismaService } from '@nx-fullstack-realworld/backend/common';
 import { HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { from, of } from 'rxjs';
-import { catchError, exhaustMap, switchMap, take } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import {
   isNullOrUndefined,
   UserRegistrationResponse,
@@ -20,18 +20,6 @@ export class RegisterUserHandler
     private readonly tokenService: TokenService
   ) {}
 
-  private handleUserCreationError(
-    command: RegisterUserCommand,
-    error: any
-  ): ReturnType<typeof catchError> {
-    this.logger.error(`Error while creating user ${command.email}`);
-    this.logger.error(error);
-    throw new HttpException(
-      `An error has occurred while creating user ${command.email}`,
-      HttpStatus.INTERNAL_SERVER_ERROR
-    );
-  }
-
   execute(command: RegisterUserCommand): Promise<UserRegistrationResponse> {
     return from(
       this.prisma.users.findFirst({
@@ -41,12 +29,10 @@ export class RegisterUserHandler
       })
     )
       .pipe(
-        take(1),
-        catchError((error) => this.handleUserCreationError(command, error)),
-        switchMap((existingUser) => {
+        mergeMap((existingUser) => {
           if (!isNullOrUndefined(existingUser)) {
             throw new HttpException(
-              `User with email ${command.email} already exists`,
+              { email: [`User with email ${command.email} already exists`] },
               HttpStatus.BAD_REQUEST
             );
           }
@@ -62,10 +48,8 @@ export class RegisterUserHandler
               },
             })
           ).pipe(
-            take(1),
-            catchError((error) => this.handleUserCreationError(command, error)),
-            exhaustMap((user) => {
-              return of({
+            map((user) => {
+              return {
                 username: user.username,
                 email: user.email,
                 bio: user.bio,
@@ -75,9 +59,14 @@ export class RegisterUserHandler
                   user.username!,
                   user.email
                 ),
-              } as UserRegistrationResponse);
+              } as UserRegistrationResponse;
             })
           );
+        }),
+        catchError((error) => {
+          this.logger.error(`Error while creating user ${command.email}`);
+          this.logger.error(error);
+          throw error;
         })
       )
       .toPromise();
