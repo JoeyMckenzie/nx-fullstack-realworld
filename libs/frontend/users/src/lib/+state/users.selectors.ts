@@ -11,7 +11,7 @@ export const getCurrentUser = createSelector(
   (state: State) => state.currentUser
 );
 
-export const isLoading = createSelector(
+export const getLoading = createSelector(
   getUsersState,
   (state: State) => state.loading === true
 );

@@ -21,7 +21,7 @@ export class UsersEffects {
             })
             .pipe(map((response) => fromActions.registerUserSuccess(response)));
         },
-        onError: (action, error) => fromActions.registerUserFailure(error),
+        onError: (_, error) => fromActions.registerUserFailure(error),
       })
     )
   );

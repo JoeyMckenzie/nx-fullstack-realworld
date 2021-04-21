@@ -1,13 +1,7 @@
 import { User } from '@nx-fullstack-realworld/shared';
 import { initialState, State, UsersPartialState } from './users.reducer';
 import * as fromSelectors from './users.selectors';
-
-const MOCK_USER: User = {
-  bio: 'mock bio',
-  email: 'mock email',
-  username: 'mock username',
-  token: 'mock token',
-};
+import { mockUser } from './users.mock';
 
 describe('Users Selectors', () => {
   let state: UsersPartialState;
@@ -18,8 +12,33 @@ describe('Users Selectors', () => {
     };
   });
 
-  describe('Users Selectors', () => {
-    it('getCurrentUser() should not return a user when no user has attempted to login or register', () => {
+  describe('getLoading()', () => {
+    it('should return false on initial state', () => {
+      // Arrange/Act
+      const result = fromSelectors.getLoading(state);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return true when loading flag has been set', () => {
+      // Arrange
+      state = {
+        users: {
+          loading: true,
+        },
+      };
+
+      // Act
+      const result = fromSelectors.getLoading(state);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('getCurrentUser()', () => {
+    it('should return undefined on initial state', () => {
       // Arrange/Act
       const currentUser = fromSelectors.getCurrentUser(state);
 
@@ -27,12 +46,12 @@ describe('Users Selectors', () => {
       expect(currentUser).toBeUndefined();
     });
 
-    it('getCurrentUser() should a user when a user has successfully logged in or registered', () => {
+    it('should return a user when a user has successfully logged in or registered', () => {
       // Arrange
       state = {
         users: {
           ...initialState,
-          currentUser: MOCK_USER,
+          currentUser: mockUser,
         },
       };
 
@@ -40,7 +59,7 @@ describe('Users Selectors', () => {
       const result = fromSelectors.getCurrentUser(state);
 
       // Assert
-      expect(result).toBe(MOCK_USER);
+      expect(result).toBe(mockUser);
     });
   });
 });

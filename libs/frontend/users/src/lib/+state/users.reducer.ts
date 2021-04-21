@@ -7,7 +7,7 @@ export const USERS_FEATURE_KEY = 'users';
 export interface State {
   loading: boolean;
   currentUser?: Maybe<User>;
-  currentError?: Maybe<ApiError>;
+  currentError?: Maybe<string[]>;
 }
 
 export interface UsersPartialState {
@@ -29,7 +29,7 @@ const usersReducer = createReducer(
     (state, { bio, email, token, username, image }) => ({
       ...state,
       loading: false,
-      user: {
+      currentUser: {
         bio,
         email,
         token,
@@ -41,7 +41,7 @@ const usersReducer = createReducer(
   on(fromActions.registerUserFailure, (state, errors) => ({
     ...state,
     loading: false,
-    error: errors,
+    currentError: errors.errors,
   }))
 );
 
