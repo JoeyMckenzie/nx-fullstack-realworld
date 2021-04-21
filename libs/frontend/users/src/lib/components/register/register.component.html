@@ -9,10 +9,10 @@
         </p>
 
         <ul *ngIf="!isValid" class="error-messages">
-          <li *ngIf="registerForm.controls['username'].errors?.required">Go fuck yourself</li>
-          <li *ngFor="let error of formErrors">
-            {{ error }}
-          </li>
+          <li *ngIf="getFormControlErrors('email', 'email')">Please enter a valid email</li>
+          <li *ngIf="getFormControlErrors('username', 'email')">Email is a required</li>
+          <li *ngIf="getFormControlErrors('username', 'required')">Username is a required</li>
+          <li *ngIf="!isNullOrUndefined(currentRegistrationError$ | async)">{{ currentRegistrationError$ | async }}</li>
         </ul>
 
         <form [formGroup]="registerForm" (submit)="onFormSubmit()">

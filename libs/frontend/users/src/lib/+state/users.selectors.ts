@@ -6,7 +6,7 @@ export const getUsersState = createFeatureSelector<UsersPartialState, State>(
   USERS_FEATURE_KEY
 );
 
-export const getUser = createSelector(
+export const getCurrentUser = createSelector(
   getUsersState,
   (state: State) => state.currentUser
 );
@@ -16,7 +16,7 @@ export const isLoading = createSelector(
   (state: State) => state.loading === true
 );
 
-export const getUserError = createSelector(
+export const getCurrentError = createSelector(
   getUsersState,
   (state: State) => state.currentError
 );

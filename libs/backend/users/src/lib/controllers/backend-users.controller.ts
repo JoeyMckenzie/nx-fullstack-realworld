@@ -34,7 +34,7 @@ export class BackendUsersController {
 
     return from(
       this.commandBus.execute(
-        new RegisterUserCommand(email!, username!, password!)
+        new RegisterUserCommand(email, username, password)
       )
     );
   }
