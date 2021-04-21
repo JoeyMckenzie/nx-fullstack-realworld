@@ -48,6 +48,7 @@ export class RegisterUserHandler
           }
 
           this.logger.log(`Creating user account for ${command.email}`);
+
           return from(
             this.prisma.users.create({
               data: {

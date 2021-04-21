@@ -6,16 +6,21 @@ export interface User {
   image?: string;
 }
 
-export interface UserRegistrationRequest {
+export interface UserAuthenticationDto {
   email: string;
-  username: string;
   password: string;
 }
 
-export interface UserLoginRequest {
-  email: string;
+export interface UserRegistrationDto extends UserAuthenticationDto {
   username: string;
-  password: string;
+}
+
+export interface UserRegistrationRequest {
+  user: UserRegistrationDto;
+}
+
+export interface UserLoginRequest {
+  user: UserLoginRequest;
 }
 
 export interface UserRegistrationResponse extends User {}

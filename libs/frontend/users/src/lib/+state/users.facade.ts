@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { select, Store, Action } from '@ngrx/store';
-import { UserRegistrationRequest } from '@nx-fullstack-realworld/shared';
+import {
+  UserRegistrationDto,
+  UserRegistrationRequest,
+} from '@nx-fullstack-realworld/shared';
 
 import * as fromActions from './users.actions';
 import * as fromUsers from './users.reducer';
@@ -18,7 +21,7 @@ export class UsersFacade {
     this.store.dispatch(action);
   }
 
-  register(userRegistration: UserRegistrationRequest) {
+  register(userRegistration: UserRegistrationDto) {
     this.store.dispatch(fromActions.registerUser(userRegistration));
   }
 }

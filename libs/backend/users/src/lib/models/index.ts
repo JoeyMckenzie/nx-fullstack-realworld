@@ -1,7 +1,10 @@
-import { UserRegistrationRequest } from '@nx-fullstack-realworld/shared';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  UserRegistrationRequest,
+  UserRegistrationDto,
+} from '@nx-fullstack-realworld/shared';
+import { IsEmail, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
-export class UserRegistrationDto implements UserRegistrationRequest {
+class RegistrationDto implements UserRegistrationDto {
   @IsEmail()
   readonly email!: string;
 
@@ -12,4 +15,10 @@ export class UserRegistrationDto implements UserRegistrationRequest {
   @IsString()
   @IsNotEmpty()
   readonly password!: string;
+}
+
+export class RegistrationRequest implements UserRegistrationRequest {
+  @IsNotEmpty()
+  @ValidateNested()
+  user!: RegistrationDto;
 }

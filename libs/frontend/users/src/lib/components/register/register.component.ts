@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.currentRegistrationError$.pipe(takeUntil(this.unsubscribe$));
 
     this.registerForm = this.formBuilder.group({
-      email: ['', Validators.required, Validators.email],
+      email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
       password: ['', Validators.required],
     });

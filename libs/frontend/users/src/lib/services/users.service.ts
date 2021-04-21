@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  UserLoginRequest,
   UserLoginResponse,
+  UserRegistrationDto,
+  UserAuthenticationDto,
   UserRegistrationRequest,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
@@ -16,17 +17,19 @@ export class UsersService {
   constructor(private http: HttpClient) {}
 
   registerUser(
-    request: UserRegistrationRequest
+    request: UserRegistrationDto
   ): Observable<UserRegistrationResponse> {
     return this.http.post<UserRegistrationResponse>(
       `${environment.apiBaseUrl}/users`,
       {
         user: request,
-      }
+      } as UserRegistrationRequest
     );
   }
 
-  loginUser(request: UserLoginRequest): Observable<UserRegistrationResponse> {
+  loginUser(
+    request: UserAuthenticationDto
+  ): Observable<UserRegistrationResponse> {
     return this.http.post<UserLoginResponse>(
       `${environment.apiBaseUrl}/users`,
       {
