@@ -8,7 +8,7 @@ import {
   isNullOrUndefined,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
-import { TokenService } from '../services/token.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @CommandHandler(RegisterUserCommand)
 export class RegisterUserHandler
@@ -17,7 +17,7 @@ export class RegisterUserHandler
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly tokenService: TokenService
+    private readonly authenticationService: AuthenticationService
   ) {}
 
   execute(command: RegisterUserCommand): Promise<UserRegistrationResponse> {
@@ -53,8 +53,8 @@ export class RegisterUserHandler
                 username: user.username,
                 email: user.email,
                 bio: user.bio,
-                image: user.email,
-                token: this.tokenService.generateToken(
+                image: user.image,
+                token: this.authenticationService.generateToken(
                   user.id,
                   user.username!,
                   user.email
