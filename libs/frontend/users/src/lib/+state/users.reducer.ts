@@ -1,5 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import { ApiError, Maybe, User } from '@nx-fullstack-realworld/shared';
+import {
+  ApiError,
+  ErrorCollection,
+  isNullOrUndefined,
+  Maybe,
+  User,
+} from '@nx-fullstack-realworld/shared';
 import * as fromActions from './users.actions';
 
 export const USERS_FEATURE_KEY = 'users';
@@ -16,6 +22,20 @@ export interface UsersPartialState {
 
 export const initialState: State = {
   loading: false,
+};
+
+export const flattenErrors = (errors: ErrorCollection): string[] => {
+  const flattenedErrors: string[] = [];
+
+  if (isNullOrUndefined(errors)) {
+    return flattenedErrors;
+  }
+
+  for (let errorKey in errors!) {
+    flattenedErrors.push(`${errorKey}: ${errors[errorKey]}`);
+  }
+
+  return flattenedErrors;
 };
 
 const usersReducer = createReducer(
@@ -41,7 +61,7 @@ const usersReducer = createReducer(
   on(fromActions.registerUserFailure, (state, { errors }) => ({
     ...state,
     loading: false,
-    currentErrors: [...errors],
+    currentErrors: flattenErrors(errors),
   }))
 );
 

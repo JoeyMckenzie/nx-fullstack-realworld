@@ -19,6 +19,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LocalStorageService } from '../services/local-storage.service';
 import {
   mockError,
+  mockErrorResponse,
   mockHttpException,
   mockUser,
   mockUserRegistrationDto,
@@ -118,7 +119,9 @@ describe(UsersEffects.name, () => {
       });
 
       const expected = cold('--b', {
-        b: fromActions.registerUserFailure({ errors: mockError.message }),
+        b: fromActions.registerUserFailure({
+          errors: mockErrorResponse.errors,
+        }),
       });
 
       // Assert

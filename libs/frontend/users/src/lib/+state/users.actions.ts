@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import {
   ApiError,
+  ErrorCollection,
   UserRegistrationDto,
   UserRegistrationRequest,
   UserRegistrationResponse,
@@ -16,5 +17,5 @@ export const registerUserSuccess = createAction(
 );
 export const registerUserFailure = createAction(
   '[Users] Register user failure',
-  props<{ errors: string[] }>()
+  props<{ errors: ErrorCollection }>()
 );

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { isNullOrUndefined, Maybe } from '@nx-fullstack-realworld/shared';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { UsersFacade } from '../../+state';
 
 @Component({
@@ -17,8 +17,8 @@ import { UsersFacade } from '../../+state';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   currentRegistrationErrors$ = this.usersFacade.currentErrors$;
-  registerForm!: FormGroup;
   isNullOrUndefined = isNullOrUndefined;
+  registerForm!: FormGroup;
 
   private unsubscribe$ = new Subject();
 
@@ -27,30 +27,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private usersFacade: UsersFacade
   ) {}
 
-  get isValid(): boolean {
-    let childControlsAreValid = true;
-
-    for (const controlKey in this.registerForm.controls) {
-      if (!childControlsAreValid) {
-        break;
-      }
-
-      const control = this.registerForm.get(controlKey);
-
-      if (isNullOrUndefined(control)) {
-        continue;
-      }
-
-      if (!control!.valid) {
-        childControlsAreValid = false;
-      }
-    }
-
-    return this.registerForm.valid && childControlsAreValid;
-  }
-
   ngOnInit(): void {
-    this.currentRegistrationErrors$.pipe(takeUntil(this.unsubscribe$));
+    this.currentRegistrationErrors$.pipe(
+      takeUntil(this.unsubscribe$),
+      tap(() => console.log('selector updated'))
+    );
 
     this.registerForm = this.formBuilder.group(
       {

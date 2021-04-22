@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ApiError,
+  ErrorResponse,
   User,
   UserRegistrationDto,
 } from '@nx-fullstack-realworld/shared';
@@ -19,6 +20,12 @@ export const mockUserRegistrationDto: UserRegistrationDto = {
   username: 'mock username',
 };
 
+export const mockErrorResponse: ErrorResponse = {
+  errors: {
+    error: ['mock'],
+  },
+};
+
 export const mockError: ApiError = {
   error: 'error',
   statusCode: 400,
@@ -26,5 +33,5 @@ export const mockError: ApiError = {
 };
 
 export const mockHttpException: any = {
-  error: mockError,
+  error: mockErrorResponse,
 };

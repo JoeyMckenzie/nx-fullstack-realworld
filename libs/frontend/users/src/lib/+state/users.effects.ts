@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { fetch } from '@nrwl/angular';
-import { ApiError } from '@nx-fullstack-realworld/shared';
+import { ApiError, ErrorResponse } from '@nx-fullstack-realworld/shared';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LocalStorageService } from '../services/local-storage.service';
@@ -27,7 +27,7 @@ export class UsersEffects {
         },
         onError: (_, error) =>
           fromActions.registerUserFailure({
-            errors: (error.error as ApiError).message,
+            errors: (error.error as ErrorResponse).errors,
           }),
       })
     )

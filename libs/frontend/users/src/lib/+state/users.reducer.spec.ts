@@ -1,6 +1,11 @@
 import * as fromActions from './users.actions';
-import { mockError, mockUser, mockUserRegistrationDto } from './users.mock';
-import { initialState, reducer, State } from './users.reducer';
+import {
+  mockError,
+  mockErrorResponse,
+  mockUser,
+  mockUserRegistrationDto,
+} from './users.mock';
+import { flattenErrors, initialState, reducer, State } from './users.reducer';
 
 describe('Users Reducer', () => {
   describe('register actions', () => {
@@ -33,7 +38,7 @@ describe('Users Reducer', () => {
     it('should return an error upon unsuccessful registration', () => {
       // Arrange
       const action = fromActions.registerUserFailure({
-        errors: mockError.message,
+        errors: mockErrorResponse.errors,
       });
 
       // Act
@@ -42,7 +47,9 @@ describe('Users Reducer', () => {
       // Assert
       expect(result.loading).toBe(false);
       expect(result.currentUser).toBeUndefined();
-      expect(result.currentErrors).toStrictEqual(mockError.message);
+      expect(result.currentErrors).toStrictEqual(
+        flattenErrors(mockErrorResponse.errors)
+      );
     });
   });
 });

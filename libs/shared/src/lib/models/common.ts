@@ -5,11 +5,12 @@ export type ApiErrors = string[];
 // export interface ApiError {
 //   errors: string[]
 // };
+export type ErrorCollection = {
+  [key: string]: string[];
+};
+
 export interface ErrorResponse {
-  message: string;
-  errors: {
-    [key: string]: string[];
-  };
+  errors: ErrorCollection;
 }
 
 export interface ApiError {
