@@ -1,3 +1,4 @@
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 import { BackendUsersController } from './backend-users.controller';
 
@@ -6,7 +7,8 @@ describe('BackendUsersController', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [],
+      imports: [CqrsModule],
+      providers: [CommandBus],
       controllers: [BackendUsersController],
     }).compile();
 
