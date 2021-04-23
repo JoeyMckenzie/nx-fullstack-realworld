@@ -5,7 +5,8 @@ import * as crypto from 'crypto';
 import { isStringNullUndefinedOrEmpty } from '@nx-fullstack-realworld/shared';
 
 const PASSWORD_ITERATIONS = 1000;
-const PASSWORD_KEY_LENGTH = process.env.PASSWORD_SALT?.length;
+const PASSWORD_KEY_LENGTH = 64;
+const PASSWORD_SALT_LENGTH = 16;
 
 @Injectable()
 export class AuthenticationService {
@@ -32,9 +33,36 @@ export class AuthenticationService {
     );
   }
 
-  generateHashedPassword(rawPassword: string): string {
-    const hash = crypto.pbkdf2();
+  private generateHash(password: string, salt: string): string {
+    return crypto
+      .pbkdf2Sync(
+        password,
+        salt,
+        PASSWORD_ITERATIONS,
+        PASSWORD_KEY_LENGTH,
+        'sha512'
+      )
+      .toString('hex');
+  }
 
-    return '';
+  generateHashedPasswordWithSalt(
+    password: string
+  ): { salt: string; password: string } {
+    const salt = crypto.randomBytes(PASSWORD_SALT_LENGTH).toString('hex');
+
+    const hashedPassword = this.generateHash(password, salt);
+
+    return {
+      salt,
+      password: hashedPassword,
+    };
+  }
+
+  validatePassword(
+    passwordAttempt: string,
+    storedPassword: string,
+    salt: string
+  ): boolean {
+    return storedPassword === this.generateHash(passwordAttempt, salt);
   }
 }

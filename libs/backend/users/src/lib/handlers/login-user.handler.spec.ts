@@ -1,19 +1,18 @@
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '@nx-fullstack-realworld/backend/common';
 import { from } from 'rxjs';
-import { RegisterUserCommand } from '../commands';
-import { RegisterUserHandler } from './register-user.handler';
+import { LoginUserCommand } from '../commands';
+import { LoginUserHandler } from './login-user.handler';
 import { TestScheduler } from 'rxjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { UserRegistrationResponse } from '@nx-fullstack-realworld/shared';
+import {
+  UserLoginResponse,
+  UserRegistrationResponse,
+} from '@nx-fullstack-realworld/shared';
 import { Users } from '@prisma/client';
 import { AuthenticationService } from '../services/authentication.service';
 
-const mockCommand = new RegisterUserCommand(
-  'mock email',
-  'mock username',
-  'mock password'
-);
+const mockCommand = new LoginUserCommand('mock email', 'mock password');
 
 const mockUser: Users = {
   id: 'mock id',
@@ -27,7 +26,7 @@ const mockUser: Users = {
   updatedAt: new Date(),
 };
 
-const mockUserResponse: UserRegistrationResponse = {
+const mockUserResponse: UserLoginResponse = {
   bio: 'mock bio',
   email: 'mock email',
   username: 'mock username',
@@ -39,19 +38,20 @@ const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toStrictEqual(expected);
 });
 
-describe(RegisterUserHandler.name, () => {
-  let handler: RegisterUserHandler;
+describe(LoginUserHandler.name, () => {
+  let handler: LoginUserHandler;
   let authenticationService: AuthenticationService;
   let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        RegisterUserHandler,
+        LoginUserHandler,
         {
           provide: AuthenticationService,
           useValue: {
             generateToken: jest.fn(),
+            generateHashedPasswordWithSalt: jest.fn(),
           },
         },
         {
@@ -66,7 +66,7 @@ describe(RegisterUserHandler.name, () => {
       ],
     }).compile();
 
-    handler = module.get(RegisterUserHandler);
+    handler = module.get(LoginUserHandler);
     authenticationService = module.get(AuthenticationService);
     prismaService = module.get(PrismaService);
   });

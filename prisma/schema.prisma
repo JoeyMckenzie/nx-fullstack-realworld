@@ -16,6 +16,7 @@ model Users {
   updatedAt  DateTime   @updatedAt
   username   String?
   email      String     @unique
+  salt       String?
   password   String?
   image      String?
   articles   Articles[]

@@ -11,9 +11,8 @@ import {
 import { AuthenticationService } from '../services/authentication.service';
 
 @CommandHandler(RegisterUserCommand)
-export class RegisterUserHandler
-  implements ICommandHandler<RegisterUserCommand> {
-  private readonly logger = new Logger(RegisterUserHandler.name);
+export class LoginUserHandler implements ICommandHandler<RegisterUserCommand> {
+  private readonly logger = new Logger(LoginUserHandler.name);
 
   constructor(
     private readonly prisma: PrismaService,
@@ -39,12 +38,20 @@ export class RegisterUserHandler
 
           this.logger.log(`Creating user account for ${command.email}`);
 
+          const {
+            password,
+            salt,
+          } = this.authenticationService.generateHashedPasswordWithSalt(
+            command.password
+          );
+
           return from(
             this.prisma.users.create({
               data: {
                 username: command.username,
                 email: command.email,
-                password: command.password,
+                password,
+                salt,
               },
             })
           ).pipe(
