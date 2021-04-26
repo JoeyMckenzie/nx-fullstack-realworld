@@ -3,15 +3,14 @@ import { LoginUserCommand, RegisterUserCommand } from '../commands';
 import { PrismaService } from '@nx-fullstack-realworld/backend/common';
 import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { from } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   isNullOrUndefined,
   UserLoginResponse,
-  UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
 import { AuthenticationService } from '../services/authentication.service';
 
-@CommandHandler(RegisterUserCommand)
+@CommandHandler(LoginUserCommand)
 export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   private readonly logger = new Logger(LoginUserHandler.name);
 
@@ -38,14 +37,13 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
           }
 
           this.logger.log(`Validating user account for ${command.email}`);
+          const passwordIsValid = this.authenticationService.validatePassword(
+            command.password,
+            existingUser!.password!,
+            existingUser!.salt!
+          );
 
-          if (
-            this.authenticationService.validatePassword(
-              command.password,
-              existingUser!.password!,
-              existingUser!.salt!
-            )
-          ) {
+          if (!passwordIsValid) {
             throw new HttpException(
               {
                 password: [

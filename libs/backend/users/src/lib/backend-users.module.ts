@@ -3,12 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { BackendCommonModule } from '@nx-fullstack-realworld/backend/common';
 
 import { BackendUsersController } from './controllers/backend-users.controller';
-import { LoginUserHandler } from './handlers';
+import { LoginUserHandler, RegisterUserHandler } from './handlers';
 import { AuthenticationService } from './services/authentication.service';
 
 @Module({
   imports: [CqrsModule, BackendCommonModule],
   controllers: [BackendUsersController],
-  providers: [LoginUserHandler, AuthenticationService],
+  providers: [RegisterUserHandler, LoginUserHandler, AuthenticationService],
 })
 export class BackendUsersModule {}

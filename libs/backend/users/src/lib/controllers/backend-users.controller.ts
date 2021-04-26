@@ -8,12 +8,13 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
+  UserLoginResponse,
   UserRegistrationRequest,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
 import { from, Observable } from 'rxjs';
-import { RegisterUserCommand } from '../commands';
-import { RegistrationRequest } from '../models';
+import { LoginUserCommand, RegisterUserCommand } from '../commands';
+import { LoginRequest, RegistrationRequest } from '../models';
 
 @Controller('users')
 export class BackendUsersController {
@@ -35,6 +36,24 @@ export class BackendUsersController {
     return from(
       this.commandBus.execute(
         new RegisterUserCommand(email, username, password)
+      )
+    );
+  }
+
+  @Post('/login')
+  @HttpCode(HttpStatus.OK)
+  loginUser(
+    @Body() userLoginRequest: LoginRequest
+  ): Observable<UserLoginResponse> {
+    this.logger.log(
+      `Received user registration request for ${userLoginRequest.user.email}`
+    );
+
+    const { email, password } = userLoginRequest.user;
+
+    return from(
+      this.commandBus.execute(
+        new LoginUserCommand(email, password)
       )
     );
   }

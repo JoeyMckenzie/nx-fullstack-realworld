@@ -11,8 +11,8 @@ import {
 import { AuthenticationService } from '../services/authentication.service';
 
 @CommandHandler(RegisterUserCommand)
-export class LoginUserHandler implements ICommandHandler<RegisterUserCommand> {
-  private readonly logger = new Logger(LoginUserHandler.name);
+export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand> {
+  private readonly logger = new Logger(RegisterUserHandler.name);
 
   constructor(
     private readonly prisma: PrismaService,

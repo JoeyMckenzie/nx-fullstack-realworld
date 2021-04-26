@@ -20,7 +20,7 @@ export interface UserRegistrationRequest {
 }
 
 export interface UserLoginRequest {
-  user: UserLoginRequest;
+  user: UserAuthenticationDto;
 }
 
 export interface UserRegistrationResponse extends User {}
