@@ -51,7 +51,7 @@ describe(LoginUserHandler.name, () => {
           provide: AuthenticationService,
           useValue: {
             generateToken: jest.fn(),
-            generateHashedPasswordWithSalt: jest.fn(),
+            validatePassword: jest.fn(),
           },
         },
         {
@@ -75,11 +75,11 @@ describe(LoginUserHandler.name, () => {
     expect(handler).toBeTruthy();
   });
 
-  it('should throw and exception when already user exists', (done) => {
+  it('should throw and exception when the user does not exist', (done) => {
     // Arrange
     const findFirstSpy = jest
       .spyOn(prismaService.users, 'findFirst')
-      .mockResolvedValue(mockUser);
+      .mockResolvedValue(null);
 
     // Act
     from(handler.execute(mockCommand)).subscribe(
@@ -88,21 +88,46 @@ describe(LoginUserHandler.name, () => {
         // Assert
         expect(findFirstSpy).toHaveBeenCalled();
         expect(response).not.toBeUndefined();
-        expect(response.getStatus()).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.getStatus()).toBe(HttpStatus.NOT_FOUND);
         done();
       }
     );
   });
 
-  it('should create the user when none is found', (done) => {
+  it('should not login the user in and generate the token on a invalid login attempt', (done) => {
     // Arrange
     const findFirstSpy = jest
       .spyOn(prismaService.users, 'findFirst')
-      .mockResolvedValue(null);
-
-    const createSpy = jest
-      .spyOn(prismaService.users, 'create')
       .mockResolvedValue(mockUser);
+
+    const validateSpy = jest
+      .spyOn(authenticationService, 'validatePassword')
+      .mockReturnValue(false);
+
+    // Act
+    from(handler.execute(mockCommand)).subscribe(
+      () => {}, // Ignore the next value pushed out, only concerned about the error
+      (response: HttpException) => {
+        // Assert
+        expect(response).not.toBeUndefined();
+        expect(findFirstSpy).toHaveBeenCalled();
+        expect(validateSpy).toHaveBeenCalled();
+        expect(response.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
+        expect(authenticationService.generateToken).not.toHaveBeenCalled();
+        done();
+      }
+    );
+  });
+
+  it('should login the user in and generate the token on a valid login attempt', (done) => {
+    // Arrange
+    const findFirstSpy = jest
+      .spyOn(prismaService.users, 'findFirst')
+      .mockResolvedValue(mockUser);
+
+    const validateSpy = jest
+      .spyOn(authenticationService, 'validatePassword')
+      .mockReturnValue(true);
 
     const tokenSpy = jest
       .spyOn(authenticationService, 'generateToken')
@@ -114,8 +139,8 @@ describe(LoginUserHandler.name, () => {
         // Assert
         expect(response).toStrictEqual(mockUserResponse);
         expect(findFirstSpy).toHaveBeenCalled();
-        expect(createSpy).toHaveBeenCalled();
-        expect(tokenSpy).toHaveBeenCalled();
+        expect(validateSpy).toHaveBeenCalled();
+        expect(authenticationService.generateToken).toHaveBeenCalled();
         done();
       }
     );

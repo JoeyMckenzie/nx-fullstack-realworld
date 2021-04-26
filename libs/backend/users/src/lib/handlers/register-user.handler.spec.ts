@@ -52,6 +52,7 @@ describe(RegisterUserHandler.name, () => {
           provide: AuthenticationService,
           useValue: {
             generateToken: jest.fn(),
+            generateHashedPasswordWithSalt: jest.fn(),
           },
         },
         {
@@ -100,6 +101,10 @@ describe(RegisterUserHandler.name, () => {
       .spyOn(prismaService.users, 'findFirst')
       .mockResolvedValue(null);
 
+    const generatePasswordWithSaltSpy = jest
+      .spyOn(authenticationService, 'generateHashedPasswordWithSalt')
+      .mockReturnValue({ salt: 'mock salt', password: 'mock password' });
+
     const createSpy = jest
       .spyOn(prismaService.users, 'create')
       .mockResolvedValue(mockUser);
@@ -115,6 +120,7 @@ describe(RegisterUserHandler.name, () => {
         expect(response).toStrictEqual(mockUserResponse);
         expect(findFirstSpy).toHaveBeenCalled();
         expect(createSpy).toHaveBeenCalled();
+        expect(generatePasswordWithSaltSpy).toHaveBeenCalled();
         expect(tokenSpy).toHaveBeenCalled();
         done();
       }
