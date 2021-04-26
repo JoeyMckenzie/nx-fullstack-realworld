@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { RegisterUserCommand } from '../commands';
+import { RegisterUserCommand } from '../../commands';
 import { PrismaService } from '@nx-fullstack-realworld/backend/common';
 import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { from } from 'rxjs';
@@ -8,10 +8,11 @@ import {
   isNullOrUndefined,
   UserRegistrationResponse,
 } from '@nx-fullstack-realworld/shared';
-import { AuthenticationService } from '../services/authentication.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @CommandHandler(RegisterUserCommand)
-export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand> {
+export class RegisterUserHandler
+  implements ICommandHandler<RegisterUserCommand> {
   private readonly logger = new Logger(RegisterUserHandler.name);
 
   constructor(

@@ -1,42 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '@nx-fullstack-realworld/backend/common';
 import { from } from 'rxjs';
-import { LoginUserCommand } from '../commands';
 import { LoginUserHandler } from './login-user.handler';
-import { TestScheduler } from 'rxjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import {
-  UserLoginResponse,
-  UserRegistrationResponse,
-} from '@nx-fullstack-realworld/shared';
-import { Users } from '@prisma/client';
-import { AuthenticationService } from '../services/authentication.service';
-
-const mockCommand = new LoginUserCommand('mock email', 'mock password');
-
-const mockUser: Users = {
-  id: 'mock id',
-  bio: 'mock bio',
-  email: 'mock email',
-  password: 'mock password',
-  salt: 'mock salt',
-  username: 'mock username',
-  image: 'mock image',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const mockUserResponse: UserLoginResponse = {
-  bio: 'mock bio',
-  email: 'mock email',
-  username: 'mock username',
-  image: 'mock image',
-  token: 'mock token',
-};
-
-const testScheduler = new TestScheduler((actual, expected) => {
-  expect(actual).toStrictEqual(expected);
-});
+import { UserRegistrationResponse } from '@nx-fullstack-realworld/shared';
+import { AuthenticationService } from '../../services/authentication.service';
+import { mockLoginCommand, mockUser, mockUserLoginResponse } from '../mocks';
 
 describe(LoginUserHandler.name, () => {
   let handler: LoginUserHandler;
@@ -82,7 +51,7 @@ describe(LoginUserHandler.name, () => {
       .mockResolvedValue(null);
 
     // Act
-    from(handler.execute(mockCommand)).subscribe(
+    from(handler.execute(mockLoginCommand)).subscribe(
       () => {}, // Ignore the next value pushed out, only concerned about the error
       (response: HttpException) => {
         // Assert
@@ -105,7 +74,7 @@ describe(LoginUserHandler.name, () => {
       .mockReturnValue(false);
 
     // Act
-    from(handler.execute(mockCommand)).subscribe(
+    from(handler.execute(mockLoginCommand)).subscribe(
       () => {}, // Ignore the next value pushed out, only concerned about the error
       (response: HttpException) => {
         // Assert
@@ -134,10 +103,10 @@ describe(LoginUserHandler.name, () => {
       .mockReturnValue('mock token');
 
     // Act
-    from(handler.execute(mockCommand)).subscribe(
+    from(handler.execute(mockLoginCommand)).subscribe(
       (response: UserRegistrationResponse) => {
         // Assert
-        expect(response).toStrictEqual(mockUserResponse);
+        expect(response).toStrictEqual(mockUserLoginResponse);
         expect(findFirstSpy).toHaveBeenCalled();
         expect(validateSpy).toHaveBeenCalled();
         expect(authenticationService.generateToken).toHaveBeenCalled();
